@@ -1,0 +1,281 @@
+@import "./reset.css";
+
+/* --- settings --- */
+
+:root {
+    --ff: "Josefin Sans";
+
+    --fw-normal: 400;
+    --fw-bold: 700;
+
+    --color-bg-page: #171823;
+    --color-bg-lists: #25273d;
+    --color-bg-lists-header: #30324d;
+
+    --color-text-200: #4d5067;
+    --color-text-300: #5b5e7e;
+    --color-text-400: #767992;
+    --color-text-600: #c8cbe7;
+    --color-text-900: #fff;
+
+    --color-icon-200: #404155;
+
+    --color-gradient: linear-gradient(135deg, #55ddff, #c058f3);
+
+    --space-block-page: 3rem;
+    --space-inline-page: 1.5rem;
+
+    --space-task-inline: 1.25rem;
+    --space-task-block: 1rem;
+
+    --border-radious: 8px;
+
+    --ratio: 1.3;
+    --s-5: calc(var(--s-4) / var(--ratio));
+    --s-4: calc(var(--s-3) / var(--ratio));
+    --s-3: calc(var(--s-2) / var(--ratio));
+    --s-2: calc(var(--s-1) / var(--ratio));
+    --s-1: calc(var(--s0) / var(--ratio));
+    --s0: 1rem;
+    --s1: calc(var(--s0) * var(--ratio));
+    --s2: calc(var(--s1) * var(--ratio));
+    --s3: calc(var(--s2) * var(--ratio));
+    --s4: calc(var(--s3) * var(--ratio));
+    --s5: calc(var(--s4) * var(--ratio));
+}
+
+/* --- elements --- */
+
+body {
+    background-color: var(--color-bg-page);
+    font-family: var(--ff);
+    color: var(--color-text-900);
+    padding-block: var(--space-block-page);
+    height: 100vh;
+    height: 100svh;
+}
+
+header {
+    font-size: var(--s2);
+}
+
+button {
+    cursor: pointer;
+}
+
+/* --- layout --- */
+
+.flex-row {
+    display: flex;
+}
+
+.flex-col {
+    display: flex;
+    flex-direction: column;
+
+    & > * {
+        width: 100%;
+    }
+}
+
+/* --- components --- */
+
+.main-page {
+    padding-inline: var(--space-inline-page);
+}
+
+.container {
+    max-width: 40rem;
+    margin-inline: auto;
+}
+
+.logo {
+    letter-spacing: 0.938rem;
+    font-weight: var(--fw-bold);
+}
+
+.icon {
+    display: inline-block;
+    width: 1.5em;
+    height: 1.5em;
+    flex-shrink: 0;
+}
+
+.add-task__input {
+    background-color: var(--color-bg-lists);
+    padding-inline: var(--space-task-inline);
+    border-radius: var(--border-radious) 0 0 var(--border-radious);
+
+    &::placeholder {
+        color: var(--color-text-400);
+    }
+}
+
+.add-task__button {
+    padding: calc(var(--space-task-inline) / 2);
+    background-image: var(--color-gradient);
+    border-radius: 0 var(--border-radious) var(--border-radious) 0;
+
+    &:disabled {
+        filter: brightness(50%);
+        cursor: not-allowed;
+    }
+}
+
+.project-details {
+    text-wrap: nowrap;
+    font-size: 0.875rem;
+    padding: calc(var(--space-task-block) + 0.2rem) var(--space-task-inline);
+    border-radius: var(--border-radious) var(--border-radious) 0 0;
+    background-color: var(--color-bg-lists-header);
+}
+
+.project-details__counter {
+    color: var(--color-text-400);
+}
+
+.tasks-container {
+    color: var(--color-text-600);
+    font-size: 0.92rem;
+    position: relative;
+    border-radius: 0 0 var(--border-radious) var(--border-radious);
+    overflow: hidden;
+}
+
+.tasks-list {
+    position: absolute;
+    inset: 0;
+    overflow-y: auto;
+}
+
+.task-item {
+    background-color: var(--color-bg-lists);
+    padding: var(--space-task-block) var(--space-task-inline);
+
+    & + & {
+        border-top: 1px solid var(--color-icon-200);
+    }
+}
+
+.task-check-btn {
+    border: 1px solid var(--color-icon-200);
+    flex-shrink: 0;
+
+    & > svg {
+        display: none;
+    }
+
+    &.completed {
+        background-image: var(--color-gradient);
+        border: none;
+
+        > svg {
+            display: revert;
+        }
+
+        &:hover {
+            outline: 2px solid var(--color-text-600);
+        }
+
+        + span {
+            text-decoration: line-through;
+            color: var(--color-text-200);
+        }
+    }
+
+    &:not(.completed):hover {
+        background: linear-gradient(
+                    var(--color-bg-lists),
+                    var(--color-bg-lists)
+                )
+                padding-box,
+            var(--color-gradient) border-box;
+        border-radius: 100%;
+        border: 1px solid transparent;
+    }
+}
+
+.task-remove-btn {
+    margin-left: auto;
+
+    > svg {
+        fill: var(--color-icon-200);
+    }
+
+    &:hover {
+        filter: brightness(2);
+    }
+}
+
+.empty-list {
+    text-align: center;
+    font-size: var(--s2);
+}
+
+/* --- utilities --- */
+
+.justify-center {
+    justify-content: center;
+}
+
+.justify-between {
+    justify-content: space-between;
+}
+
+.align-center {
+    align-items: center;
+}
+
+.w-f {
+    width: 100%;
+}
+
+.f-g-1 {
+    flex-grow: 1;
+}
+
+.flex-1 {
+    flex: 1;
+}
+
+.mt-16 {
+    margin-top: 1rem;
+}
+
+.mt-40 {
+    margin-top: 2.5rem;
+}
+
+.mt-60 {
+    margin-top: 3.75rem;
+}
+
+.gap-16 {
+    gap: 1rem;
+}
+
+.gap-8 {
+    gap: 0.5rem;
+}
+
+.icon-smaller {
+    width: 1.3em;
+    height: 1.3em;
+}
+
+.truncate-text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
+    max-width: 100%;
+}
+
+.square {
+    width: 1.25rem;
+    height: 1.25rem;
+}
+
+.round {
+    border-radius: 100%;
+}

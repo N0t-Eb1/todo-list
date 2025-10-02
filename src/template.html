@@ -3,7 +3,109 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Document</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,400;0,700&display=swap"
+            rel="stylesheet"
+        />
+        <title>Todo app</title>
     </head>
-    <body></body>
+    <body class="flex-col">
+        <aside class="side-bar"></aside>
+        <div class="main-page flex-col f-g-1">
+            <header class="container flex-row justify-between">
+                <span class="logo">TODO</span>
+                <button>
+                    <svg
+                        class="icon"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 -960 960 960"
+                        fill="#e3e3e3"
+                    >
+                        <path
+                            d="M120-240v-80h720v80H120Zm0-200v-80h720v80H120Zm0-200v-80h720v80H120Z"
+                        />
+                    </svg>
+                </button>
+            </header>
+            <main class="container mt-60 flex-col f-g-1">
+                <div class="add-task flex-row">
+                    <input
+                        class="add-task__input f-g-1"
+                        type="text"
+                        placeholder="Create a new todo..."
+                    /><button class="add-task__button" disabled="true">
+                        <svg
+                            class="icon"
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 -960 960 960"
+                            fill="#e3e3e3"
+                        >
+                            <path
+                                d="M440-120v-320H120v-80h320v-320h80v320h320v80H520v320h-80Z"
+                            />
+                        </svg>
+                    </button>
+                </div>
+                <div class="project-details mt-16">
+                    <div class="flex-row gap-8">
+                        <svg
+                            class="icon icon-smaller"
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 -960 960 960"
+                            fill="#e3e3e3"
+                        >
+                            <path
+                                d="M160-160q-33 0-56.5-23.5T80-240v-480q0-33 23.5-56.5T160-800h240l80 80h320q33 0 56.5 23.5T880-640H447l-80-80H160v480l96-320h684L837-217q-8 26-29.5 41.5T760-160H160Zm84-80h516l72-240H316l-72 240Zm0 0 72-240-72 240Zm-84-400v-80 80Z"
+                            />
+                        </svg>
+                        <span class="project-name truncate-text"
+                            >default project</span
+                        >
+                        <span></span>
+                        <span class="project-details__counter">1 items</span>
+                    </div>
+                </div>
+                <div
+                    class="tasks-container flex-col flex-1 justify-center align-center"
+                >
+                    <ul class="tasks-list">
+                        <li class="task-item flex-row gap-16 align-center">
+                            <button
+                                class="task-check-btn flex-row justify-center align-center square round"
+                            >
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 -960 960 960"
+                                    fill="#ff9"
+                                >
+                                    <path
+                                        d="M400-304 240-464l56-56 104 104 264-264 56 56-320 320Z"
+                                    />
+                                </svg>
+                            </button>
+                            <span
+                                >create todo app after learning enough js</span
+                            >
+                            <button class="task-remove-btn">
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    height="24px"
+                                    viewBox="0 -960 960 960"
+                                    width="24px"
+                                    fill="#e3e3e3"
+                                >
+                                    <path
+                                        d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"
+                                    />
+                                </svg>
+                            </button>
+                        </li>
+                    </ul>
+                    <!-- <div class="empty-list">Empty List</div> -->
+                </div>
+            </main>
+        </div>
+    </body>
 </html>
