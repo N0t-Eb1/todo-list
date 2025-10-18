@@ -148,7 +148,7 @@ button {
         width: 100%;
         text-align: left;
         padding-inline: var(--space-inline-page);
-        padding-block: calc(var(--space-inline-page) / 4);
+        padding-block: calc(var(--space-inline-page) / 2);
     }
 
     &:hover {
@@ -170,7 +170,7 @@ button {
 
 .new-project-btn {
     width: 100%;
-    padding-block: calc(var(--space-inline-page) / 3);
+    padding-block: calc(var(--space-inline-page) / 2);
     background: var(--color-gradient);
     border-radius: var(--border-radious);
 }
