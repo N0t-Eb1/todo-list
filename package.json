@@ -3,9 +3,7 @@
     "version": "1.0.0",
     "main": "index.js",
     "scripts": {
-        "build": "webpack",
-        "dev": "webpack server",
-        "deploy": "git checkout gh-pages && git merge main --no-edit && npm run build && git add dist -f && git commit -m 'Deployment commit' && git push origin gh-pages && git checkout main"
+        "dev": "webpack server"
     },
     "repository": {
         "type": "git",
