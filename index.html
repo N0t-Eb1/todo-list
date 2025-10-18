@@ -11,12 +11,37 @@
         />
         <title>Todo app</title>
     <script defer src="main.js"></script></head>
-    <body class="flex-col">
-        <aside class="side-bar"></aside>
+    <body class="flex-row preload" data-action-click="handleEdgeCases">
+        <aside class="side-bar flex-col">
+            <button class="mode-switch">
+                <svg
+                    class="icon-smaller"
+                    xmlns="http://www.w3.org/2000/svg"
+                    height="24px"
+                    viewBox="0 -960 960 960"
+                    width="24px"
+                    fill="#fff"
+                >
+                    <path
+                        d="M480-120q-150 0-255-105T120-480q0-150 105-255t255-105q14 0 27.5 1t26.5 3q-41 29-65.5 75.5T444-660q0 90 63 153t153 63q55 0 101-24.5t75-65.5q2 13 3 26.5t1 27.5q0 150-105 255T480-120Zm0-80q88 0 158-48.5T740-375q-20 5-40 8t-40 3q-123 0-209.5-86.5T364-660q0-20 3-40t8-40q-78 32-126.5 102T200-480q0 116 82 198t198 82Zm-10-270Z"
+                    />
+                </svg>
+            </button>
+            <h2 class="projects-header mt-20">Projects</h2>
+            <div class="projects-container mt-16 flex-col flex-1"></div>
+            <div class="button-container mt-40">
+                <button
+                    class="new-project-btn data"
+                    data-action-click="openNewProjectModal"
+                >
+                    Create new project
+                </button>
+            </div>
+        </aside>
         <div class="main-page flex-col f-g-1">
             <header class="container flex-row justify-between">
                 <span class="logo">TODO</span>
-                <button>
+                <button class="menu" data-action-click="openSidebar">
                     <svg
                         class="icon"
                         xmlns="http://www.w3.org/2000/svg"
@@ -35,7 +60,12 @@
                         class="add-task__input f-g-1"
                         type="text"
                         placeholder="Create a new todo..."
-                    /><button class="add-task__button" disabled="true">
+                        data-action-input="validateAddTask"
+                    /><button
+                        class="add-task__button"
+                        data-action-click="addTask"
+                        disabled="true"
+                    >
                         <svg
                             class="icon"
                             xmlns="http://www.w3.org/2000/svg"
@@ -48,7 +78,9 @@
                         </svg>
                     </button>
                 </div>
-                <div class="project-details mt-16">
+                <div
+                    class="project-details mt-16 flex-row justify-between align-center"
+                >
                     <div class="flex-row gap-8">
                         <svg
                             class="icon icon-smaller"
@@ -60,52 +92,57 @@
                                 d="M160-160q-33 0-56.5-23.5T80-240v-480q0-33 23.5-56.5T160-800h240l80 80h320q33 0 56.5 23.5T880-640H447l-80-80H160v480l96-320h684L837-217q-8 26-29.5 41.5T760-160H160Zm84-80h516l72-240H316l-72 240Zm0 0 72-240-72 240Zm-84-400v-80 80Z"
                             />
                         </svg>
-                        <span class="project-name truncate-text"
-                            >default project</span
-                        >
+                        <span class="project-name truncate-text"></span>
                         <span></span>
-                        <span class="project-details__counter">1 items</span>
+                        <span class="project-details__counter"></span>
+                    </div>
+                    <div class="drop-down">
+                        <button>
+                            <svg
+                                class="icon"
+                                xmlns="http://www.w3.org/2000/svg"
+                                height="24px"
+                                viewBox="0 -960 960 960"
+                                width="24px"
+                                fill="#e3e3e3"
+                            >
+                                <path
+                                    d="M480-160q-33 0-56.5-23.5T400-240q0-33 23.5-56.5T480-320q33 0 56.5 23.5T560-240q0 33-23.5 56.5T480-160Zm0-240q-33 0-56.5-23.5T400-480q0-33 23.5-56.5T480-560q33 0 56.5 23.5T560-480q0 33-23.5 56.5T480-400Zm0-240q-33 0-56.5-23.5T400-720q0-33 23.5-56.5T480-800q33 0 56.5 23.5T560-720q0 33-23.5 56.5T480-640Z"
+                                />
+                            </svg>
+                        </button>
                     </div>
                 </div>
                 <div
                     class="tasks-container flex-col flex-1 justify-center align-center"
-                >
-                    <ul class="tasks-list">
-                        <li class="task-item flex-row gap-16 align-center">
-                            <button
-                                class="task-check-btn flex-row justify-center align-center square round"
-                            >
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    viewBox="0 -960 960 960"
-                                    fill="#ff9"
-                                >
-                                    <path
-                                        d="M400-304 240-464l56-56 104 104 264-264 56 56-320 320Z"
-                                    />
-                                </svg>
-                            </button>
-                            <span
-                                >create todo app after learning enough js</span
-                            >
-                            <button class="task-remove-btn">
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    height="24px"
-                                    viewBox="0 -960 960 960"
-                                    width="24px"
-                                    fill="#e3e3e3"
-                                >
-                                    <path
-                                        d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"
-                                    />
-                                </svg>
-                            </button>
-                        </li>
-                    </ul>
-                    <!-- <div class="empty-list">Empty List</div> -->
-                </div>
+                ></div>
             </main>
         </div>
+        <dialog class="dialog new-project">
+            <div class="dialog__container container">
+                <h2 class="dialog__header">New project</h2>
+                <input
+                    class="dialog__input"
+                    type="text"
+                    placeholder="Project name"
+                    data-action-input="validateDialog"
+                />
+                <div class="dialog__buttons">
+                    <button
+                        class="dialog__button cancel"
+                        data-action-click="closeDialog"
+                    >
+                        Cancel
+                    </button>
+                    <button
+                        class="dialog__button add"
+                        disabled
+                        data-action-click="addNewProject"
+                    >
+                        Add
+                    </button>
+                </div>
+            </div>
+        </dialog>
     </body>
 </html>
