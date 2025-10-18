@@ -1,116 +1,172 @@
-const elems = {
-    addTaskInput: document.querySelector(".add-task__input"),
-    addTaskBtn: document.querySelector(".add-task__button"),
-    projectName: document.querySelector(".project-name"),
-    tasksCount: document.querySelector(".project-details__counter"),
-    tasksContainer: document.querySelector(".tasks-container"),
+import dom from "./DOM-elements";
+import {
+    createTask,
+    emptyList,
+    createListContainer,
+    createProjectsContainer,
+    createProjectItem,
+    emitEvent,
+    isValidInput,
+} from "./helpers";
+
+const tempUiState = {
+    listContainerScrollPosition: null,
+    previousProject: null,
 };
 
-const deligation = {};
+const clickActions = {
+    handleEdgeCases(element) {
+        if (
+            dom.sideBar.classList.contains("visible") &&
+            !element.closest(".side-bar") &&
+            !document.querySelector("dialog[open]")
+        )
+            dom.sideBar.classList.remove("visible");
+    },
 
-const createElement = (tag, attributes, text) => {
-    const element = document.createElement(tag);
-    attributes.forEach(attribute =>
-        element.setAttribute(attribute[0], attribute[1])
+    closeDialog(button) {
+        const dialog = button.closest("dialog");
+        const input = dialog.querySelector("input");
+        dialog.close();
+        input.value = "";
+        inputActions.validateDialog(input);
+    },
+
+    openNewProjectModal() {
+        dom.newProjectDialog.showModal();
+    },
+
+    addNewProject() {
+        const input = dom.newProjectDialog.querySelector("input");
+        emitEvent("newProject", input.value.trim());
+
+        input.value = "";
+        inputActions.validateDialog(input);
+        dom.newProjectDialog.close();
+        dom.sideBar.classList.remove("visible");
+    },
+
+    openSidebar() {
+        dom.sideBar.classList.add("visible");
+    },
+
+    changeCurrentProject(project) {
+        emitEvent(
+            "changeCurrentProject",
+            project.closest(".project").dataset.id
+        );
+
+        dom.sideBar.classList.remove("visible");
+    },
+
+    addTask() {
+        emitEvent("newTaskSubmitted", dom.addTaskInput.value.trim());
+
+        dom.addTaskInput.value = "";
+        dom.addTaskBtn.setAttribute("disabled", "");
+    },
+
+    toggleCompletion(button) {
+        emitEvent(
+            "toggleTaskCompletion",
+            button.closest(".task-item").dataset.taskId
+        );
+    },
+
+    deleteTask(button) {
+        emitEvent("removeTask", button.closest(".task-item").dataset.taskId);
+    },
+};
+
+const scrollActions = {
+    listContainer(list) {
+        tempUiState.listContainerScrollPosition = list.scrollTop;
+    },
+};
+
+const inputActions = {
+    validateAddTask(input) {
+        if (isValidInput(input.value))
+            dom.addTaskBtn.removeAttribute("disabled");
+        else dom.addTaskBtn.setAttribute("disabled", "");
+    },
+
+    validateDialog(input) {
+        const confirmBtn = input.parentElement.querySelector(".add");
+        if (isValidInput(input.value)) confirmBtn.removeAttribute("disabled");
+        else confirmBtn.setAttribute("disabled", "");
+    },
+};
+
+export function renderApp(state) {
+    renderProjectsMenu(state);
+    setProjectHeader(state.currentProject);
+    renderTasksList(state.currentProject);
+    manageScrollPosition(state.currentProject);
+}
+
+function renderProjectsMenu(state) {
+    const projectsContainer = createProjectsContainer();
+    state.projects.forEach(project =>
+        projectsContainer.append(
+            createProjectItem(project, state.currentProject)
+        )
     );
-    if (text) element.textContent = text;
-    return element;
-};
+    dom.projectsMenuContainer.replaceChildren(projectsContainer);
+}
 
-const createTask = task => {
-    const taskitem = createElement("li", [
-        ["class", "task-item flex-row gap-16 align-center"],
-        ["data-task-id", task.id],
-    ]);
+function setProjectHeader(project) {
+    dom.projectName.textContent = project.name;
+    dom.taskCount.textContent = `${project.tasksLeft} tasks left`;
+}
 
-    const toggleBtn = createElement("button", [
-        [
-            "class",
-            `task-check-btn flex-row justify-center align-center square round ${
-                task.completed ? "completed" : ""
-            }`,
-        ],
-    ]);
-    toggleBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" fill="#ff9"><path d="M400-304 240-464l56-56 104 104 264-264 56 56-320 320Z"/></svg>`;
-
-    const taskText = createElement("span", [], task.title);
-
-    const deleteBtn = createElement("button", [["class", "task-remove-btn"]]);
-    deleteBtn.innerHTML = `<svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    height="24px"
-                                    viewBox="0 -960 960 960"
-                                    width="24px"
-                                    fill="#e3e3e3"
-                                >
-                                    <path
-                                        d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"
-                                    />
-                                </svg>`;
-    taskitem.append(toggleBtn, taskText, deleteBtn);
-
-    return taskitem;
-};
-
-export const render = state => {
-    let { projects, currentProject } = state;
-
-    elems.projectName.textContent = currentProject.name;
-    elems.tasksCount.textContent = currentProject.tasksLeft + " tasks";
-
-    if (!currentProject.tasks.length) {
-        elems.tasksContainer.replaceChildren(
-            createElement("div", [["class", "empty-list"]], "Empty List")
-        );
-    } else {
-        const listContainer = createElement("ul", [["class", "tasks-list"]]);
-        currentProject.tasks.forEach(task =>
-            listContainer.appendChild(createTask(task))
-        );
-
-        elems.tasksContainer.replaceChildren(listContainer);
+function renderTasksList(project) {
+    if (!project.tasks.length) dom.tasksContainer.replaceChildren(emptyList());
+    else {
+        const list = createListContainer();
+        project.tasks.forEach(task => list.appendChild(createTask(task)));
+        dom.tasksContainer.replaceChildren(list);
     }
-};
+}
 
-const toggleAddTaskBtnVisibility = bool => {
-    if (bool) elems.addTaskBtn.removeAttribute("disabled");
-    else elems.addTaskBtn.setAttribute("disabled", "true");
-};
+function manageScrollPosition(project) {
+    if (!project.tasks.length) return;
 
-const toggleTaskCompletion = taskId => {
-    window.dispatchEvent(
-        new CustomEvent("toggleTaskCompletion", { detail: taskId })
-    );
-};
+    if (tempUiState.previousProject !== project.id)
+        tempUiState.listContainerScrollPosition = 0;
+    tempUiState.previousProject = project.id;
+    document.querySelector(".tasks-list").scrollTop =
+        tempUiState.listContainerScrollPosition;
+}
 
-const removeTask = taskId => {
-    window.dispatchEvent(new CustomEvent("removeTask", { detail: taskId }));
-};
+/* ---click events--- */
+window.addEventListener("click", e => {
+    const isAClickTarget = e.target.closest("[data-action-click]");
 
-/* --- event listeners --- */
-elems.addTaskInput.addEventListener("input", e => {
-    toggleAddTaskBtnVisibility(/\S/.test(e.target.value));
+    if (isAClickTarget)
+        clickActions[isAClickTarget.dataset.actionClick](e.target);
 });
 
-elems.addTaskBtn.addEventListener("click", e => {
-    window.dispatchEvent(
-        new CustomEvent("newTaskSubmitted", {
-            detail: elems.addTaskInput.value.trim(),
-        })
-    );
+/* ---scroll events--- */
+window.addEventListener(
+    "scroll",
+    e => {
+        const isAScrollTarget = e.target.closest("[data-action-scroll]");
 
-    elems.addTaskInput.value = "";
+        if (isAScrollTarget)
+            scrollActions[isAScrollTarget.dataset.actionScroll](e.target);
+    },
+    true
+);
 
-    toggleAddTaskBtnVisibility(false);
+/* ---input event(for validating user input)--- */
+window.addEventListener("input", e => {
+    const isAInputTarget = e.target.closest("[data-action-input]");
+
+    if (isAInputTarget)
+        inputActions[isAInputTarget.dataset.actionInput](e.target);
 });
 
-document.addEventListener("click", e => {
-    const isInsideATask = e.target.closest(".task-item");
-    if (!isInsideATask) return;
-
-    if (isInsideATask && e.target.closest(".task-check-btn"))
-        toggleTaskCompletion(isInsideATask.dataset.taskId);
-
-    if (isInsideATask && e.target.closest(".task-remove-btn"))
-        removeTask(isInsideATask.dataset.taskId);
+window.addEventListener("load", () => {
+    document.body.classList.remove("preload");
 });

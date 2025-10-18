@@ -1,13 +1,21 @@
-import actions, { getCurrentState, getTask } from "./model";
-import { render } from "./view";
+import actions from "./model";
+import { renderApp } from "./view";
 
 /* --- handling events --- */
 window.addEventListener("newTaskSubmitted", e => {
-    actions.addTask({ text: e.detail });
+    actions.addTask({ title: e.detail });
+});
+
+window.addEventListener("changeCurrentProject", e => {
+    actions.changeCurrentProject(e.detail);
+});
+
+window.addEventListener("newProject", e => {
+    actions.addProject({ name: e.detail });
 });
 
 window.addEventListener("toggleTaskCompletion", e => {
-    actions.toggleTaskComplete(e.detail);
+    actions.toggleTaskCompletion(e.detail);
 });
 
 window.addEventListener("removeTask", e => {
@@ -15,8 +23,8 @@ window.addEventListener("removeTask", e => {
 });
 
 window.addEventListener("stateUpdate", e => {
-    render(e.detail);
+    renderApp(e.detail);
 });
 
-/* --- app initilization --- */
-render(getCurrentState());
+/* --- initial render --- */
+renderApp(actions.appState);

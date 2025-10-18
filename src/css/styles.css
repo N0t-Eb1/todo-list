@@ -8,9 +8,10 @@
     --fw-normal: 400;
     --fw-bold: 700;
 
+    --color-cancel: rgb(221, 56, 56);
     --color-bg-page: #171823;
     --color-bg-lists: #25273d;
-    --color-bg-lists-header: #30324d;
+    --color-bg-lists-header: #353857;
 
     --color-text-200: #4d5067;
     --color-text-300: #5b5e7e;
@@ -21,11 +22,12 @@
     --color-icon-200: #404155;
 
     --color-gradient: linear-gradient(135deg, #55ddff, #c058f3);
+    --text-gradient: linear-gradient(to bottom, #fff, #c058f3);
 
     --space-block-page: 3rem;
-    --space-inline-page: 1.5rem;
+    --space-inline-page: 1.2rem;
 
-    --space-task-inline: 1.25rem;
+    --space-task-inline: 1.1rem;
     --space-task-block: 1rem;
 
     --border-radious: 8px;
@@ -42,15 +44,15 @@
     --s3: calc(var(--s2) * var(--ratio));
     --s4: calc(var(--s3) * var(--ratio));
     --s5: calc(var(--s4) * var(--ratio));
+
+    --animation-timing: 200ms;
 }
 
 /* --- elements --- */
 
 body {
-    background-color: var(--color-bg-page);
     font-family: var(--ff);
     color: var(--color-text-900);
-    padding-block: var(--space-block-page);
     height: 100vh;
     height: 100svh;
 }
@@ -61,6 +63,10 @@ header {
 
 button {
     cursor: pointer;
+}
+
+::backdrop {
+    backdrop-filter: blur(3px);
 }
 
 /* --- layout --- */
@@ -81,10 +87,96 @@ button {
 /* --- components --- */
 
 .main-page {
+    background-color: var(--color-bg-page);
+    padding: var(--space-block-page) var(--space-inline-page);
+    transition: filter var(--animation-timing);
+
+    .side-bar.visible + & {
+        filter: brightness(0.5);
+        pointer-events: none;
+    }
+}
+
+.side-bar {
+    transform: translateX(100%);
+    position: fixed;
+    z-index: 10;
+    inset: 0 0 0 auto;
+    width: min(21.875rem, 80%);
+    background-color: var(--color-bg-lists);
+    padding-block: var(--space-block-page);
+    font-size: var(--s1);
+    transition: transform var(--animation-timing) ease-out;
+
+    &.visible {
+        transform: translateX(0);
+    }
+}
+
+.mode-switch {
+    width: max-content;
+    background-color: var(--color-bg-lists-header);
+    border-radius: var(--border-radious);
+    padding: var(--s-2);
+    margin-left: calc(100% - var(--space-inline-page));
+    transform: translateX(-100%);
+}
+
+.projects-header {
+    background: var(--text-gradient);
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
     padding-inline: var(--space-inline-page);
+    font-size: calc(var(--s1) * 1.5);
+}
+
+.projects-container {
+    position: relative;
+    overflow: hidden;
+}
+
+.projects-list {
+    color: var(--color-text-600);
+    font-size: calc(var(--s0) * 1.1);
+    position: absolute;
+    inset: 0;
+    overflow-y: auto;
+}
+
+.project {
+    & > button {
+        width: 100%;
+        text-align: left;
+        padding-inline: var(--space-inline-page);
+        padding-block: calc(var(--space-inline-page) / 4);
+    }
+
+    &:hover {
+        background-color: var(--color-bg-lists-header);
+    }
+
+    &.selected {
+        background-color: var(--color-text-200);
+        color: #fff;
+        pointer-events: none;
+    }
+}
+
+.button-container {
+    padding-inline: var(--space-inline-page);
+
+    font-size: var(--s0);
+}
+
+.new-project-btn {
+    width: 100%;
+    padding-block: calc(var(--space-inline-page) / 3);
+    background: var(--color-gradient);
+    border-radius: var(--border-radious);
 }
 
 .container {
+    width: 100%;
     max-width: 40rem;
     margin-inline: auto;
 }
@@ -179,7 +271,7 @@ button {
 
         + span {
             text-decoration: line-through;
-            color: var(--color-text-200);
+            color: var(--color-text-400);
         }
     }
 
@@ -197,6 +289,7 @@ button {
 
 .task-remove-btn {
     margin-left: auto;
+    padding: 0.1em;
 
     > svg {
         fill: var(--color-icon-200);
@@ -212,7 +305,69 @@ button {
     font-size: var(--s2);
 }
 
+.dialog {
+    width: 100%;
+    background-color: transparent;
+    color: var(--color-text-900);
+    padding-inline: var(--space-inline-page);
+    margin-inline: auto;
+
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.dialog__container {
+    background-color: var(--color-bg-page);
+    padding: calc(var(--space-block-page) / 2.5);
+    border-radius: var(--border-radious);
+}
+
+.dialog__header {
+    font-size: var(--s1);
+}
+
+.dialog__input {
+    background-color: var(--color-bg-lists);
+    margin-top: 0.6rem;
+    width: 100%;
+    padding: 0.5em 0.75em;
+    border-radius: var(--border-radious);
+
+    &::placeholder {
+        color: var(--color-text-400);
+    }
+}
+
+.dialog__buttons {
+    margin-top: 3rem;
+    display: flex;
+    gap: 1rem;
+}
+
+.dialog__button {
+    padding-block: 0.6em;
+
+    flex: 1;
+    border-radius: var(--border-radious);
+
+    &.add {
+        background: var(--color-gradient);
+    }
+
+    &.add:disabled {
+        filter: brightness(50%);
+        cursor: not-allowed;
+    }
+
+    &.cancel {
+        background-color: var(--color-cancel);
+    }
+}
+
 /* --- utilities --- */
+.margin-center {
+    margin-inline: auto;
+}
 
 .justify-center {
     justify-content: center;
@@ -240,6 +395,10 @@ button {
 
 .mt-16 {
     margin-top: 1rem;
+}
+
+.mt-20 {
+    margin-top: 1.25rem;
 }
 
 .mt-40 {
@@ -278,4 +437,9 @@ button {
 
 .round {
     border-radius: 100%;
+}
+
+.preload * {
+    transition: none !important;
+    animation-duration: 0.001s !important;
 }

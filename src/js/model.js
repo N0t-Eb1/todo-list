@@ -1,92 +1,98 @@
+import { emitEvent } from "./helpers";
 import { getState, updateState } from "./database";
 
-let { projects, currentProject } = getState();
+class TodoApp {
+    constructor(appState) {
+        this.projects = appState.projects.map(project => new Project(project));
+        this.currentProject = this.projects.find(
+            project => project.id === appState.currentProject.id
+        );
+    }
+
+    addProject(details) {
+        this.projects.push(new Project(details));
+        this.currentProject = this.projects.at(-1);
+    }
+
+    changeCurrentProject(projectId) {
+        this.currentProject = this.projects.find(
+            project => project.id === projectId
+        );
+    }
+
+    deleteProject() {
+        this.projects = this.projects.filter(
+            project => project !== this.currentProject
+        );
+        this.currentProject = this.projects.at(-1);
+    }
+
+    addTask(details) {
+        this.currentProject.addTask(details);
+    }
+
+    deleteTask(taskId) {
+        this.currentProject.deleteTask(taskId);
+    }
+
+    toggleTaskCompletion(taskId) {
+        this.currentProject.toggleCompletion(taskId);
+    }
+
+    get appState() {
+        return {
+            projects: this.projects,
+            currentProject: this.currentProject,
+        };
+    }
+}
 
 class Project {
-    constructor(name) {
-        this.id = crypto.randomUUID();
-        this.name = name;
-        this.tasks = [];
-        this.tasksLeft = 0;
-        this.filter = "all";
+    constructor(details) {
+        this.id = details.id ?? crypto.randomUUID();
+        this.name = details.name;
+        this.tasks = details.tasks
+            ? details.tasks.map(task => new Task(task))
+            : [];
+    }
+
+    addTask(details) {
+        this.tasks.push(new Task(details));
+    }
+
+    deleteTask(taskId) {
+        this.tasks = this.tasks.filter(task => task.id !== taskId);
+    }
+
+    toggleCompletion(taskId) {
+        this.tasks.find(task => task.id === taskId).toggleCompletion();
+    }
+
+    get tasksLeft() {
+        return this.tasks.filter(task => !task.completed).length;
     }
 }
 
 class Task {
-    constructor(taskDetails) {
-        this.id = crypto.randomUUID();
-        this.title = taskDetails.text;
-        this.completed = false;
+    constructor(details) {
+        this.id = details.id ?? crypto.randomUUID();
+        this.title = details.title;
+        this.completed = details.completed ?? false;
+    }
+
+    toggleCompletion() {
+        this.completed = !this.completed;
     }
 }
 
-export const getCurrentState = () =>
-    structuredClone({ projects, currentProject });
-
-export const getTask = taskId =>
-    currentProject.tasks.find(task => task.id === taskId);
-
-const actions = {
-    createNewProject(name) {
-        projects.push(new Project(name));
-        currentProject = projects.at(-1);
-    },
-
-    addTask(taskDetails) {
-        currentProject.tasks.push(new Task(taskDetails));
-        this.updateTasksCount();
-    },
-
-    changeCurrentProject(projectId) {
-        currentProject = projects.find(project => project.id === projectId);
-    },
-
-    deleteProject() {
-        projects = projects.filter(project => project !== currentProject);
-        currentProject = projects.length ? projects.at(-1) : null;
-    },
-
-    deleteTask(taskId) {
-        currentProject.tasks = currentProject.tasks.filter(
-            task => task.id !== taskId
-        );
-
-        this.updateTasksCount();
-    },
-
-    tasksFilter(option) {
-        currentProject.filter = option;
-    },
-
-    toggleTaskComplete(taskId) {
-        const task = currentProject.tasks.find(task => task.id === taskId);
-
-        task.completed = !task.completed;
-
-        this.updateTasksCount();
-    },
-
-    deleteCompleted() {
-        currentProject.tasks = currentProject.tasks.filter(
-            task => !task.completed
-        );
-    },
-
-    updateTasksCount() {
-        currentProject.tasksLeft = currentProject.tasks.filter(
-            task => !task.completed
-        ).length;
-    },
-};
-
-export default new Proxy(actions, {
+export default new Proxy(new TodoApp(getState()), {
     get(actions, action) {
-        return (...args) => {
-            actions[action](...args);
-            window.dispatchEvent(
-                new CustomEvent("stateUpdate", { detail: getCurrentState() })
-            );
-            // updateState(getCurrentState());
-        };
+        if (action !== "appState")
+            return (...args) => {
+                actions[action](...args);
+                emitEvent("stateUpdate", actions.appState);
+                updateState(actions.appState);
+            };
+        return Reflect.get(actions, action);
     },
 });
