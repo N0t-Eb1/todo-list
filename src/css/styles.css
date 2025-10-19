@@ -51,6 +51,7 @@
 /* --- elements --- */
 
 body {
+    background-color: var(--color-bg-page);
     font-family: var(--ff);
     color: var(--color-text-900);
     height: 100vh;
@@ -442,4 +443,22 @@ button {
 .preload * {
     transition: none !important;
     animation-duration: 0.001s !important;
+}
+
+@media (width >= 68.75rem) {
+    .main-page {
+        .side-bar.visible + & {
+            filter: revert;
+            pointer-events: none;
+        }
+    }
+
+    .menu {
+        display: none;
+    }
+
+    .side-bar {
+        position: revert;
+        transform: revert;
+    }
 }
