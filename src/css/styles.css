@@ -67,7 +67,7 @@ button {
 }
 
 ::backdrop {
-    backdrop-filter: blur(3px);
+    backdrop-filter: blur(1px) brightness(0.8);
 }
 
 /* --- layout --- */
@@ -145,27 +145,44 @@ button {
 }
 
 .project {
-    & > button {
-        width: 100%;
-        text-align: left;
-        padding-inline: var(--space-inline-page);
-        padding-block: calc(var(--space-inline-page) / 2);
-    }
+    position: relative;
+    display: flex;
 
-    &:hover {
+    &:has(.project-btn:hover):not(.selected):hover {
         background-color: var(--color-bg-lists-header);
     }
 
     &.selected {
-        background-color: var(--color-text-200);
-        color: #fff;
-        pointer-events: none;
+        background-color: #7379cfb9;
+    }
+}
+
+.project-btn {
+    padding: calc(var(--space-inline-page) / 2) var(--space-inline-page);
+    text-align: left;
+
+    &::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+    }
+}
+
+.project-properties {
+    right: var(--space-inline-page);
+    padding: 0.2em;
+    border-radius: var(--border-radious);
+    align-self: center;
+    margin-right: var(--space-inline-page);
+    z-index: 10;
+
+    &:hover {
+        background-color: var(--color-bg-lists-header);
     }
 }
 
 .button-container {
     padding-inline: var(--space-inline-page);
-
     font-size: var(--s0);
 }
 
@@ -458,7 +475,18 @@ button {
     }
 
     .side-bar {
+        order: 2;
         position: revert;
         transform: revert;
+    }
+}
+
+@media (pointer: fine) {
+    .project-properties {
+        visibility: hidden;
+
+        .project:hover & {
+            visibility: revert;
+        }
     }
 }

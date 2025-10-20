@@ -51,10 +51,10 @@ const clickActions = {
     },
 
     changeCurrentProject(project) {
-        emitEvent(
-            "changeCurrentProject",
-            project.closest(".project").dataset.id
-        );
+        const id = project.closest(".project").dataset.id;
+        if (dom.projectsMenuContainer.dataset.currentProjectId === id) return;
+
+        emitEvent("changeCurrentProject", id);
 
         dom.sideBar.classList.remove("visible");
     },
@@ -106,6 +106,8 @@ export function renderApp(state) {
 }
 
 function renderProjectsMenu(state) {
+    dom.projectsMenuContainer.dataset.currentProjectId =
+        state.currentProject.id;
     const projectsContainer = createProjectsContainer();
     state.projects.forEach(project =>
         projectsContainer.append(
@@ -165,6 +167,11 @@ window.addEventListener("input", e => {
 
     if (isAInputTarget)
         inputActions[isAInputTarget.dataset.actionInput](e.target);
+});
+
+/* --- close the sidebar when on desktop mode (when the screen is wider that 1100px) --- */
+window.matchMedia("(width >= 68.75rem)").addEventListener("change", e => {
+    if (e.matches) dom.sideBar.classList.remove("visible");
 });
 
 window.addEventListener("load", () => {
