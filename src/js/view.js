@@ -15,13 +15,8 @@ const tempUiState = {
 };
 
 const clickActions = {
-    handleEdgeCases(element) {
-        if (
-            dom.sideBar.classList.contains("visible") &&
-            !element.closest(".side-bar") &&
-            !document.querySelector("dialog[open]")
-        )
-            dom.sideBar.classList.remove("visible");
+    closeSidebar() {
+        dom.sideBar.classList.remove("visible");
     },
 
     closeDialog(button) {

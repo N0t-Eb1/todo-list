@@ -90,18 +90,12 @@ button {
 .main-page {
     background-color: var(--color-bg-page);
     padding: var(--space-block-page) var(--space-inline-page);
-    transition: filter var(--animation-timing);
-
-    .side-bar.visible + & {
-        filter: brightness(0.5);
-        pointer-events: none;
-    }
 }
 
 .side-bar {
     transform: translateX(100%);
     position: fixed;
-    z-index: 10;
+    z-index: 20;
     inset: 0 0 0 auto;
     width: min(21.875rem, 80%);
     background-color: var(--color-bg-lists);
@@ -321,6 +315,20 @@ button {
 .empty-list {
     text-align: center;
     font-size: var(--s2);
+}
+
+.sidebar-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 10;
+    visibility: hidden;
+    transition-property: backdrop-filter, visibility;
+    transition-duration: var(--animation-timing);
+
+    body:has(.side-bar.visible) & {
+        visibility: visible;
+        backdrop-filter: brightness(0.5);
+    }
 }
 
 .dialog {

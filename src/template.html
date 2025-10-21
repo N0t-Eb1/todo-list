@@ -11,7 +11,7 @@
         />
         <title>Todo app</title>
     </head>
-    <body class="flex-row preload" data-action-click="handleEdgeCases">
+    <body class="flex-row preload">
         <aside class="side-bar flex-col">
             <button class="mode-switch">
                 <svg
@@ -130,6 +130,7 @@
                 ></div>
             </main>
         </div>
+        <div class="sidebar-backdrop" data-action-click="closeSidebar"></div>
         <dialog class="dialog new-project">
             <div class="dialog__container container">
                 <h2 class="dialog__header">New project</h2>
