@@ -38,7 +38,7 @@ const clickActions = {
         input.value = "";
         inputActions.validateDialog(input);
         dom.newProjectDialog.close();
-        dom.sideBar.classList.remove("visible");
+        this.closeSidebar();
     },
 
     openSidebar() {
@@ -51,7 +51,7 @@ const clickActions = {
 
         emitEvent("changeCurrentProject", id);
 
-        dom.sideBar.classList.remove("visible");
+        this.closeSidebar();
     },
 
     addTask() {
