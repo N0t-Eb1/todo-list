@@ -114,15 +114,6 @@ dialog::backdrop {
     }
 }
 
-.mode-switch {
-    width: max-content;
-    background-color: var(--color-bg-lists-header);
-    border-radius: var(--border-radious);
-    padding: var(--s-2);
-    margin-left: calc(100% - var(--space-inline-page));
-    transform: translateX(-100%);
-}
-
 .projects-header {
     background: var(--text-gradient);
     background-clip: text;
