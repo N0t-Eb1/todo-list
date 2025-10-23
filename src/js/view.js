@@ -12,6 +12,7 @@ import {
 const tempUiState = {
     listContainerScrollPosition: null,
     previousProject: null,
+    setIntervalId: null,
 };
 
 const clickActions = {
@@ -19,12 +20,23 @@ const clickActions = {
         dom.sideBar.classList.remove("visible");
     },
 
-    closeDialog(button) {
+    closeInputtedDialog(button) {
         const dialog = button.closest("dialog");
         const input = dialog.querySelector("input");
         dialog.close();
         input.value = "";
         inputActions.validateDialog(input);
+    },
+
+    closeRegularDialog(button) {
+        button.closest("dialog").close();
+
+        clearTimeout(tempUiState.setIntervalId);
+        tempUiState.setIntervalId = null;
+        button
+            .closest("dialog")
+            .querySelector(".add")
+            .setAttribute("disabled", "");
     },
 
     openNewProjectModal() {
@@ -37,6 +49,27 @@ const clickActions = {
             dom.projectName.textContent;
 
         dialog.showModal();
+    },
+
+    openDeleteProjectDialog() {
+        const dialog = dom.deleteProjectDialog;
+        const confirmBtn = dialog.querySelector(".add");
+
+        dialog.showModal();
+
+        let timer = 4;
+        confirmBtn.textContent = timer + 1;
+        tempUiState.setIntervalId ??= setInterval(() => {
+            if (timer >= 1) {
+                confirmBtn.textContent = timer.toString();
+                timer--;
+            } else {
+                confirmBtn.textContent = "Confirm";
+                confirmBtn.removeAttribute("disabled");
+                clearInterval(tempUiState.setIntervalId);
+                tempUiState.setIntervalId = null;
+            }
+        }, 1000);
     },
 
     changeProjectName() {
@@ -86,6 +119,12 @@ const clickActions = {
     deleteTask(button) {
         emitEvent("removeTask", button.closest(".task-item").dataset.taskId);
     },
+
+    deleteProject(button) {
+        button.setAttribute("disabled", "");
+        emitEvent("deleteProject");
+        dom.deleteProjectDialog.close();
+    },
 };
 
 const scrollActions = {
@@ -113,6 +152,10 @@ export function renderApp(state) {
     setProjectHeader(state.currentProject);
     renderTasksList(state.currentProject);
     manageScrollPosition(state.currentProject);
+
+    if (state.projects.length == 1)
+        dom.deleteProjectBtn.setAttribute("disabled", "");
+    else dom.deleteProjectBtn.removeAttribute("disabled");
 }
 
 function renderProjectsMenu(state) {

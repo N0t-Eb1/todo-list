@@ -5,7 +5,9 @@ export default {
     addTaskBtn: document.querySelector(".add-task__button"),
     projectName: document.querySelector(".project-name"),
     taskCount: document.querySelector(".project-details__counter"),
+    deleteProjectBtn: document.querySelector(".delete-project-button"),
     tasksContainer: document.querySelector(".tasks-container"),
     newProjectDialog: document.querySelector(".new-project"),
     editProjectNameDialog: document.querySelector(".edit-project-name"),
+    deleteProjectDialog: document.querySelector(".delete-project"),
 };

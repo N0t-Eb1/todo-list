@@ -24,7 +24,7 @@ class TodoApp {
         );
     }
 
-    deleteProject() {
+    deleteCurrentProject() {
         this.projects = this.projects.filter(
             project => project !== this.currentProject
         );

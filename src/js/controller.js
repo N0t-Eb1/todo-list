@@ -26,6 +26,10 @@ window.addEventListener("removeTask", e => {
     actions.deleteTask(e.detail);
 });
 
+window.addEventListener("deleteProject", e => {
+    actions.deleteCurrentProject();
+});
+
 window.addEventListener("stateUpdate", e => {
     renderApp(e.detail);
 });
