@@ -9,6 +9,10 @@ class TodoApp {
         );
     }
 
+    changeCurrentProjectName(newName) {
+        this.currentProject.changeName(newName);
+    }
+
     addProject(details) {
         this.projects.push(new Project(details));
         this.currentProject = this.projects.at(-1);
@@ -54,6 +58,10 @@ class Project {
         this.tasks = details.tasks
             ? details.tasks.map(task => new Task(task))
             : [];
+    }
+
+    changeName(newName) {
+        this.name = newName;
     }
 
     addTask(details) {

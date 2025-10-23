@@ -14,6 +14,10 @@ window.addEventListener("newProject", e => {
     actions.addProject({ name: e.detail });
 });
 
+window.addEventListener("changeProjectName", e => {
+    actions.changeCurrentProjectName(e.detail);
+});
+
 window.addEventListener("toggleTaskCompletion", e => {
     actions.toggleTaskCompletion(e.detail);
 });

@@ -27,6 +27,7 @@
         "webpack-dev-server": "^5.2.2"
     },
     "dependencies": {
+        "@oddbird/css-anchor-positioning": "^0.7.0",
         "sortablejs": "^1.15.6"
     }
 }

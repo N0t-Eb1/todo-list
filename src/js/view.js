@@ -31,6 +31,21 @@ const clickActions = {
         dom.newProjectDialog.showModal();
     },
 
+    openEditProjectNameDialog() {
+        const dialog = dom.editProjectNameDialog;
+        dialog.querySelector(".dialog__input").value =
+            dom.projectName.textContent;
+
+        dialog.showModal();
+    },
+
+    changeProjectName() {
+        const input = dom.editProjectNameDialog.querySelector("input");
+        emitEvent("changeProjectName", input.value.trim());
+
+        dom.editProjectNameDialog.close();
+    },
+
     addNewProject() {
         const input = dom.newProjectDialog.querySelector("input");
         emitEvent("newProject", input.value.trim());

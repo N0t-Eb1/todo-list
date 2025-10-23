@@ -66,8 +66,14 @@ button {
     cursor: pointer;
 }
 
-::backdrop {
+dialog::backdrop {
     backdrop-filter: blur(1px) brightness(0.8);
+}
+
+[popover] {
+    margin: 0;
+    position: absolute;
+    inset: unset;
 }
 
 /* --- layout --- */
@@ -217,6 +223,51 @@ button {
     color: var(--color-text-400);
 }
 
+.project-properties-btn {
+    anchor-name: --project-properties-btn;
+
+    position: relative;
+    z-index: 1;
+
+    &::before {
+        content: "";
+        position: absolute;
+        inset: -0.3em;
+        z-index: 10;
+        border-radius: var(--border-radious);
+
+        z-index: -1;
+    }
+
+    &:hover::before {
+        background-color: var(--color-text-300);
+    }
+}
+
+.project-properties {
+    position-anchor: --project-properties-btn;
+
+    top: anchor(top);
+    right: anchor(right);
+
+    border-radius: var(--border-radious);
+    color: var(--color-text-900);
+    background-color: var(--color-bg-lists);
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px,
+        rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px,
+        rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+
+    button {
+        text-align: left;
+        width: 100%;
+        padding: 0.8rem 1.6rem;
+
+        &:hover {
+            background-color: var(--color-text-200);
+        }
+    }
+}
+
 .tasks-container {
     color: var(--color-text-600);
     font-size: 0.92rem;
@@ -344,7 +395,7 @@ button {
 }
 
 .dialog__buttons {
-    margin-top: 3rem;
+    margin-top: 2rem;
     display: flex;
     gap: 1rem;
 }
